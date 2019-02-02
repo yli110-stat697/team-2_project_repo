@@ -38,4 +38,4 @@ Note: This compares columns Day_on_drug, and severity in placebo and treatment d
 [Research Question 3] Was the adverse reaction times differ significantly between two groups of patients? 
 Rationale: This could help us to find out whether the duration of adverse reaction has impact (other than the actual treatment*) between two treatment groups.
 Note: This compares the columns ADR_DURATION from adverse_reaction and severity from placebo and treatment.
-;v
+;
