@@ -6,7 +6,8 @@
 * 
 [Dataset 1 Name] patient_info
 
-[Dataset Description] This dataset contains the basic information about patients in the study, including sex, age, weight and race.
+[Dataset Description] This dataset contains the basic information about 
+patients in the study, including sex, age, weight and race.
 
 [Experimental Unit Description] Each patient in this study
 
@@ -18,7 +19,8 @@
 
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
 
-[Unique ID Schema] There's one column named patient_id which specifies the identities of patients.
+[Unique ID Schema] There's one column named patient_id which specifies the 
+identities of patients.
 ;
 %let inputDataset1DSN = patient_info;
 %let inputDataset1URL =
@@ -30,7 +32,8 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/patient_i
 *
 [Dataset 2 Name] placebo
 
-[Dataset Description] The dataset contains the recorded adverse reactions of patients in the placebo group.
+[Dataset Description] The dataset contains the recorded adverse reactions of 
+patients in the placebo group.
 
 [Experimental Unit Description] Each patient in this study
 
@@ -42,7 +45,8 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/patient_i
 
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
 
-[Unique ID Schema] There's one column named patient_id which specifies the identities of patients.
+[Unique ID Schema] There's one column named patient_id which specifies the 
+identities of patients.
 ;
 %let inputDataset2DSN = placebo;
 %let inputDataset2URL =
@@ -54,7 +58,8 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/placebo.x
 *
 [Dataset 3 Name] treatment
 
-[Dataset Description] The dataset contains the recorded adverse reactions of patients in the drug-treated group.
+[Dataset Description] The dataset contains the recorded adverse reactions of 
+patients in the drug-treated group.
 
 [Experimental Unit Description] Each patient in the study
 
@@ -66,7 +71,8 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/placebo.x
 
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
 
-[Unique ID Schema] There's one column named patient_id which specifies the identities of patients.
+[Unique ID Schema] There's one column named patient_id which specifies the 
+identities of patients.
 ;
 %let inputDataset3DSN = treatment;
 %let inputDataset3URL =
