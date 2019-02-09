@@ -138,7 +138,7 @@ proc sql;
             row_count_for_patient_id > 1
     ;
     /* there are some replicated observations, meaning that this dataset nees
-	to be cleaned*/
+    to be cleaned*/
     create table patient_info_final as
         select
             distinct *
@@ -156,150 +156,59 @@ proc sql;
         select
              patient_id
             ,day_on_drug
+			,adr_severity
+			,relation_to_drug
             ,adverse_reaction
+			,adr_duration
             ,count(*) as row_count_for_placebo_obs
         from
             placebo
         group by
              patient_id
             ,day_on_drug
+			,adr_severity
+			,relation_to_drug
             ,adverse_reaction
+			,adr_duration
         having
             row_count_for_placebo_obs > 1
     ;
-    /* remove rows with missing unique id components, or with unique ids that
-       do not correspond to schools; after executing this query, the new
-       dataset frpm1516 will have no duplicate/repeated unique id values,
-       and all unique id values will correspond to our experimenal units of
-       interest, which are California Public K-12 schools; this means the 
-       columns County_Code, District_Code, and School_Code in frpm1516 are 
-       guaranteed to form a composite key */
-    create table frpm1516 as
+    create table placebo_final as
         select
-            *
+            distinct *
         from
-            frpm1516_raw
-        where
-            /* remove rows with missing unique id value components */
-            not(missing(County_Code))
-            and
-            not(missing(District_Code))
-            and
-            not(missing(School_Code))
-            and
-            /* remove rows for District Offices and non-public schools */
-            School_Code not in ("0000000","0000001")
+            placebo
     ;
 quit;
 
-
-* check gradaf15_raw for bad unique id values, where the column CDS_CODE is 
-intended to be a primary key;
+* check treatment dataset using the same techniques as above;
 proc sql;
-    /* check for unique id values that are repeated, missing, or correspond to
-       non-schools; after executing this query, we see that
-       gradaf15_raw_bad_unique_ids only has non-school values of CDS_Code that
-       need to be removed */
-    /* note to learners: the query below uses an in-line view together with a
-       left join (see Chapter 3 for definitions) to isolate all problematic
-       rows within a single query; it would have been just as valid to use
-       mulitple queries, as above, but it's often convenient to use a single
-       query to create a table with speficic properties; in particular, in the
-       above two examples, we blindly eliminated rows having specific
-       properties when creating frpm1415 and frpm1516, whereas the query below
-       allows us to build a fit-for-purpose mitigation step with no guessing
-       or unnecessary effort */
-    create table gradaf15_raw_bad_unique_ids as
+    create table treat_dups as
         select
-            A.*
+             patient_id
+            ,day_on_drug
+			,adr_severity
+			,relation_to_drug
+            ,adverse_reaction
+			,adr_duration
+            ,count(*) as row_count_for_treat_obs
         from
-            gradaf15_raw as A
-            left join
-            (
-                select
-                     CDS_CODE
-                    ,count(*) as row_count_for_unique_id_value
-                from
-                    gradaf15_raw
-                group by
-                    CDS_CODE
-            ) as B
-            on A.CDS_CODE=B.CDS_CODE
+            treatment
+        group by
+             patient_id
+            ,day_on_drug
+			,adr_severity
+			,relation_to_drug
+            ,adverse_reaction
+			,adr_duration
         having
-            /* capture rows corresponding to repeated primary key values */
-            row_count_for_unique_id_value > 1
-            or
-            /* capture rows corresponding to missing primary key values */
-            missing(CDS_CODE)
-            or
-            /* capture rows corresponding to non-school primary key values */
-            substr(CDS_CODE,8,7) in ("0000000","0000001")
+            row_count_for_treat_obs > 1
     ;
-    /* remove rows with primary keys that do not correspond to schools; after
-       executing this query, the new dataset gradaf15 will have no
-       duplicate/repeated unique id values, and all unique id values will
-       correspond to our experimenal units of interest, which are California
-       Public K-12 schools; this means the column CDS_Code in gradaf15 is 
-       guaranteed to form a primary key */
-    create table gradaf15 as
+    create table treatment_final as
         select
-            *
+            distinct *
         from
-            gradaf15_raw
-        where
-            /* remove rows for District Offices and non-public schools */
-            substr(CDS_CODE,8,7) not in ("0000000","0000001")
-    ;
-quit;
-
-
-* check sat15_raw for bad unique id values, where the column CDS is intended
-to be a primary key;
-proc sql;
-    /* check for unique id values that are repeated, missing, or correspond to
-       non-schools; after executing this query, we see that
-       sat15_raw_bad_unique_ids only has non-school values of CDS that need to
-       be removed */
-    create table sat15_raw_bad_unique_ids as
-        select
-            A.*
-        from
-            sat15_raw as A
-            left join
-            (
-                select
-                     CDS
-                    ,count(*) as row_count_for_unique_id_value
-                from
-                    sat15_raw
-                group by
-                    CDS
-            ) as B
-            on A.CDS=B.CDS
-        having
-            /* capture rows corresponding to repeated primary key values */
-            row_count_for_unique_id_value > 1
-            or
-            /* capture rows corresponding to missing primary key values */
-            missing(CDS)
-            or
-            /* capture rows corresponding to non-school primary key values */
-            substr(CDS,8,7) in ("0000000","0000001")
-    ;
-    /* remove rows with primary keys that do not correspond to schools; after
-       executing this query, the new dataset gradaf15 will have no
-       duplicate/repeated unique id values, and all unique id values will
-       correspond to our experimenal units of interest, which are California
-       Public K-12 schools; this means the column CDS in sat15 is guaranteed
-       to form a primary key */
-    create table sat15 as
-        select
-            *
-        from
-        sat15_raw
-    where
-        /* remove rows for District Offices */
-        substr(CDS,8,7) ne "0000000"
+            treatment
     ;
 quit;
 
