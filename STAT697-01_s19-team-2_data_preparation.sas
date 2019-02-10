@@ -200,7 +200,7 @@ quit;
 title "Inspect Distribution_of_Age_in Patient_Info";
 proc sql;
     select
-		 min(age) as min
+         min(age) as min
         ,max(age) as max
         ,mean(age) as mean
         ,median(age) as median
