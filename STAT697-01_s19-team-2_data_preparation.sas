@@ -201,12 +201,12 @@ title "Inspect Distribution_of_Age_in Patient_Info";
 proc sql;
     select
 		 min(age) as min
-    	,max(age) as max
-    	,mean(age) as mean
-    	,median(age) as median
-    	,nmiss(age) as missing
+        ,max(age) as max
+        ,mean(age) as mean
+        ,median(age) as median
+        ,nmiss(age) as missing
     from
-    	Patient_info_final
+        Patient_info_final
     ;
 quit;
 title;
@@ -214,7 +214,7 @@ title;
 title "Inspect Dstribution_of_Race in Patient_Info";
 proc sql;
     select
-		 
+         
          race
         ,count(*) as row_count_race
     from
