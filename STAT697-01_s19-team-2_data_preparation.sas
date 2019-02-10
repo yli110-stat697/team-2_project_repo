@@ -115,7 +115,7 @@ proc sql;
         from
             patient_info
         group by
-             patient_id
+            patient_id
         having
             row_count_for_patient_id > 1
     ;
@@ -200,20 +200,21 @@ quit;
 title "Inspect Distribution_of_Age_in Patient_Info";
 proc sql;
     select
-     min(age) as min
-    ,max(age) as max
-    ,mean(age) as mean
-    ,median(age) as median
-    ,nmiss(age) as missing
+		 min(age) as min
+    	,max(age) as max
+    	,mean(age) as mean
+    	,median(age) as median
+    	,nmiss(age) as missing
     from
-    Patient_info_final
+    	Patient_info_final
     ;
 quit;
 title;
 
 title "Inspect Dstribution_of_Race in Patient_Info";
 proc sql;
-    select 
+    select
+		 
          race
         ,count(*) as row_count_race
     from
@@ -258,7 +259,7 @@ proc sql;
     from
         Placebo_final
     group by
-         adr_severity
+        adr_severity
     ;
 quit;
 title;
@@ -271,7 +272,7 @@ proc sql;
     from
         Treatment_final
     group by
-         adr_severity
+        adr_severity
     ;
 quit;
 title;
