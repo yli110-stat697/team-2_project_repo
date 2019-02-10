@@ -1,3 +1,8 @@
+*******************************************************************************;
+**************** 80-character banner for column width reference ***************;
+* (set window width to banner width to calibrate line length to 80 characters *;
+*******************************************************************************;
+
 * 
 [Dataset 1 Name] patient_info
 [Dataset Description] This dataset contains the basic information about 
@@ -110,7 +115,7 @@ proc sql;
         from
             patient_info
         group by
-             patient_id
+            patient_id
         having
             row_count_for_patient_id > 1
     ;
@@ -133,20 +138,20 @@ proc sql;
         select
              patient_id
             ,day_on_drug
-			,adr_severity
-			,relation_to_drug
+            ,adr_severity
+            ,relation_to_drug
             ,adverse_reaction
-			,adr_duration
+            ,adr_duration
             ,count(*) as row_count_for_placebo_obs
         from
             placebo
         group by
              patient_id
             ,day_on_drug
-			,adr_severity
-			,relation_to_drug
+            ,adr_severity
+            ,relation_to_drug
             ,adverse_reaction
-			,adr_duration
+            ,adr_duration
         having
             row_count_for_placebo_obs > 1
     ;
@@ -164,20 +169,20 @@ proc sql;
         select
              patient_id
             ,day_on_drug
-			,adr_severity
-			,relation_to_drug
+            ,adr_severity
+            ,relation_to_drug
             ,adverse_reaction
-			,adr_duration
+            ,adr_duration
             ,count(*) as row_count_for_treat_obs
         from
             treatment
         group by
              patient_id
             ,day_on_drug
-			,adr_severity
-			,relation_to_drug
+            ,adr_severity
+            ,relation_to_drug
             ,adverse_reaction
-			,adr_duration
+            ,adr_duration
         having
             row_count_for_treat_obs > 1
     ;
@@ -195,28 +200,27 @@ quit;
 title "Inspect Distribution_of_Age_in Patient_Info";
 proc sql;
     select
-     min(age) as min
-    ,max(age) as max
-    ,mean(age) as mean
-    ,median(age) as median
-    ,nmiss(age) as missing
+         min(age) as min
+        ,max(age) as max
+        ,mean(age) as mean
+        ,median(age) as median
+        ,nmiss(age) as missing
     from
-    Patient_info_final
+        Patient_info_final
     ;
 quit;
 title;
 
 title "Inspect Dstribution_of_Race in Patient_Info";
 proc sql;
-    select 
-		 race
-		,count(*) as row_count_race
-	from
-    	Patient_info_final
-	group by
-		race
-	having
-		row_count_race > 0
+    select
+         
+         race
+        ,count(*) as row_count_race
+    from
+        Patient_info_final
+    group by
+        race
     ;
 quit;
 title;
@@ -224,14 +228,12 @@ title;
 title "Inspect Relation_To_Drug in Placebo_final";
 proc sql;
     select
-		 relation_to_drug
-		,count(*) as row_count_relation
+         relation_to_drug
+        ,count(*) as row_count_relation
     from
-		Placebo_final
-	group by
-		relation_to_drug
-	having
-		row_count_relation > 0
+        Placebo_final
+    group by
+        relation_to_drug
     ;
 quit;
 title;
@@ -239,14 +241,12 @@ title;
 title "Inspect Relation_To_Drug in Treatment_final";
 proc sql;
     select
-		 relation_to_drug
-		,count(*) as row_count_relation
+         relation_to_drug
+        ,count(*) as row_count_relation
     from
-		Treatment_final
-	group by
-		relation_to_drug
-	having
-		row_count_relation > 0
+        Treatment_final
+    group by
+        relation_to_drug
     ;
 quit;
 title;
@@ -254,14 +254,12 @@ title;
 title "Inspect ADR_SEVERITY in Placebo_final";
 proc sql;
     select
-		 adr_severity
-		,count(*) as row_count_serverity
+         adr_severity
+        ,count(*) as row_count_serverity
     from
-		Placebo_final
-	group by
-		 adr_severity
-	having
-		row_count_serverity > 0
+        Placebo_final
+    group by
+        adr_severity
     ;
 quit;
 title;
@@ -269,14 +267,12 @@ title;
 title "Inspect ADR_SEVERITY in Treatment_final";
 proc sql;
     select
-		 adr_severity
-		,count(*) as row_count_serverity
+         adr_severity
+        ,count(*) as row_count_serverity
     from
-		Treatment_final
-	group by
-		 adr_severity
-	having
-		row_count_serverity > 0
+        Treatment_final
+    group by
+        adr_severity
     ;
 quit;
 title;
@@ -284,13 +280,13 @@ title;
 title "Inspect ADR_Duration in Placebo_final";
 proc sql;
     select
-		 min(adr_duration) as min
-		,mean(adr_duration) as mean
-		,median(adr_duration) as median
-		,max(adr_duration) as max
-		,nmiss(adr_duration) as missing
+         min(adr_duration) as min
+        ,mean(adr_duration) as mean
+        ,median(adr_duration) as median
+        ,max(adr_duration) as max
+        ,nmiss(adr_duration) as missing
    from
-		Placebo_final
+        Placebo_final
     ;
 quit;
 title;
@@ -298,13 +294,13 @@ title;
 title "Inspect ADR_Duration in Treatment_final";
 proc sql;
     select
-		 min(adr_duration) as min
-		,mean(adr_duration) as mean
-		,median(adr_duration) as median
-		,max(adr_duration) as max
-		,nmiss(adr_duration) as missing
+         min(adr_duration) as min
+        ,mean(adr_duration) as mean
+        ,median(adr_duration) as median
+        ,max(adr_duration) as max
+        ,nmiss(adr_duration) as missing
    from
-		Treatment_final
+        Treatment_final
     ;
 quit;
 title;
@@ -312,13 +308,13 @@ title;
 title "Inspect Day_On_Dug in Placebo_final";
 proc sql;
     select
-		 min(day_on_drug) as min
-		,mean(day_on_drug) as mean
-		,median(day_on_drug) as median
-		,max(day_on_drug) as max
-		,nmiss(day_on_drug) as missing
+         min(day_on_drug) as min
+        ,mean(day_on_drug) as mean
+        ,median(day_on_drug) as median
+        ,max(day_on_drug) as max
+        ,nmiss(day_on_drug) as missing
    from
-		Placebo_final
+        Placebo_final
     ;
 quit;
 title;
@@ -326,12 +322,12 @@ title;
 title "Inspect Day_On_Dug in Treatment_final";
 proc sql;
     select
-		 min(day_on_drug) as min
-		,mean(day_on_drug) as mean
-		,median(day_on_drug) as median
-		,max(day_on_drug) as max
-		,nmiss(day_on_drug) as missing
+         min(day_on_drug) as min
+        ,mean(day_on_drug) as mean
+        ,median(day_on_drug) as median
+        ,max(day_on_drug) as max
+        ,nmiss(day_on_drug) as missing
    from
-		Treatment_final
+        Treatment_final
     ;
 quit;
