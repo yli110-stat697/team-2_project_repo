@@ -1,24 +1,13 @@
-*******************************************************************************;
-**************** 80-character banner for column width reference ***************;
-* (set window width to banner width to calibrate line length to 80 characters *;
-*******************************************************************************;
-
 * 
 [Dataset 1 Name] patient_info
-
 [Dataset Description] This dataset contains the basic information about 
 patients in the study, including sex, age, weight and race.
-
 [Experimental Unit Description] Each patient in this study
-
 [Number of Observations] 357
                     
 [Number of Features] 5
-
 [Data Source] https://semanticommunity.info/@api/deki/files/25541/adverser.xls?origin=mt-web
-
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
-
 [Unique ID Schema] There's one column named patient_id which specifies the 
 identities of patients.
 ;
@@ -31,20 +20,14 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/patient_i
 
 *
 [Dataset 2 Name] placebo
-
 [Dataset Description] The dataset contains the recorded adverse reactions of 
 patients in the placebo group.
-
 [Experimental Unit Description] Each patient in this study
-
 [Number of Observations] 130
                     
 [Number of Features] 8
-
 [Data Source] https://semanticommunity.info/@api/deki/files/25541/adverser.xls?origin=mt-web
-
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
-
 [Unique ID Schema] There's one column named patient_id which specifies the 
 identities of patients.
 ;
@@ -57,20 +40,14 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/placebo.x
 
 *
 [Dataset 3 Name] treatment
-
 [Dataset Description] The dataset contains the recorded adverse reactions of 
 patients in the drug-treated group.
-
 [Experimental Unit Description] Each patient in the study
-
 [Number of Observations] 127
                     
 [Number of Features] 8
-
 [Data Source] https://semanticommunity.info/@api/deki/files/25541/adverser.xls?origin=mt-web
-
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
-
 [Unique ID Schema] There's one column named patient_id which specifies the 
 identities of patients.
 ;
@@ -215,71 +192,146 @@ quit;
 
 * inspect columns of interest in cleaned versions of datasets;
 
-title "Inspect Percent_Eligible_Free_K12 in frpm1415";
+title "Inspect Distribution_of_Age_in Patient_Info";
 proc sql;
     select
-     min(Percent_Eligible_Free_K12) as min
-    ,max(Percent_Eligible_Free_K12) as max
-    ,mean(Percent_Eligible_Free_K12) as max
-    ,median(Percent_Eligible_Free_K12) as max
-    ,nmiss(Percent_Eligible_Free_K12) as missing
+     min(age) as min
+    ,max(age) as max
+    ,mean(age) as mean
+    ,median(age) as median
+    ,nmiss(age) as missing
     from
-    frpm1415
+    Patient_info_final
     ;
 quit;
 title;
 
-title "Inspect Percent_Eligible_Free_K12 in frpm1516";
+title "Inspect Dstribution_of_Race in Patient_Info";
 proc sql;
-    select
-     min(Percent_Eligible_Free_K12) as min
-    ,max(Percent_Eligible_Free_K12) as max
-    ,mean(Percent_Eligible_Free_K12) as max
-    ,median(Percent_Eligible_Free_K12) as max
-    ,nmiss(Percent_Eligible_Free_K12) as missing
-    from
-    frpm1516
+    select 
+		 race
+		,count(*) as row_count_race
+	from
+    	Patient_info_final
+	group by
+		race
+	having
+		row_count_race > 0
     ;
 quit;
 title;
 
-title "Inspect PCTGE1500, after converting to numeric values, in sat15";
+title "Inspect Relation_To_Drug in Placebo_final";
 proc sql;
     select
-     min(input(PCTGE1500,best12.)) as min
-    ,max(input(PCTGE1500,best12.)) as max
-    ,mean(input(PCTGE1500,best12.)) as max
-    ,median(input(PCTGE1500,best12.)) as max
-    ,nmiss(input(PCTGE1500,best12.)) as missing
+		 relation_to_drug
+		,count(*) as row_count_relation
     from
-    sat15
+		Placebo_final
+	group by
+		relation_to_drug
+	having
+		row_count_relation > 0
     ;
 quit;
 title;
 
-title "Inspect NUMTSTTAKR, after converting to numeric values, in sat15";
+title "Inspect Relation_To_Drug in Treatment_final";
 proc sql;
     select
-     input(NUMTSTTAKR,best12.) as Number_of_testers
-    ,count(*)
+		 relation_to_drug
+		,count(*) as row_count_relation
     from
-    sat15
-    group by
-    calculated Number_of_testers
+		Treatment_final
+	group by
+		relation_to_drug
+	having
+		row_count_relation > 0
     ;
 quit;
 title;
 
-title "Inspect TOTAL, after converting to numeric values, in gradaf15";
+title "Inspect ADR_SEVERITY in Placebo_final";
 proc sql;
     select
-     input(TOTAL,best12.) as Number_of_course_completers
-    ,count(*)
+		 adr_severity
+		,count(*) as row_count_serverity
     from
-    gradaf15
-    group by
-    calculated Number_of_course_completers
+		Placebo_final
+	group by
+		 adr_severity
+	having
+		row_count_serverity > 0
     ;
 quit;
 title;
 
+title "Inspect ADR_SEVERITY in Treatment_final";
+proc sql;
+    select
+		 adr_severity
+		,count(*) as row_count_serverity
+    from
+		Treatment_final
+	group by
+		 adr_severity
+	having
+		row_count_serverity > 0
+    ;
+quit;
+title;
+
+title "Inspect ADR_Duration in Placebo_final";
+proc sql;
+    select
+		 min(adr_duration) as min
+		,mean(adr_duration) as mean
+		,median(adr_duration) as median
+		,max(adr_duration) as max
+		,nmiss(adr_duration) as missing
+   from
+		Placebo_final
+    ;
+quit;
+title;
+
+title "Inspect ADR_Duration in Treatment_final";
+proc sql;
+    select
+		 min(adr_duration) as min
+		,mean(adr_duration) as mean
+		,median(adr_duration) as median
+		,max(adr_duration) as max
+		,nmiss(adr_duration) as missing
+   from
+		Treatment_final
+    ;
+quit;
+title;
+
+title "Inspect Day_On_Dug in Placebo_final";
+proc sql;
+    select
+		 min(day_on_drug) as min
+		,mean(day_on_drug) as mean
+		,median(day_on_drug) as median
+		,max(day_on_drug) as max
+		,nmiss(day_on_drug) as missing
+   from
+		Placebo_final
+    ;
+quit;
+title;
+
+title "Inspect Day_On_Dug in Treatment_final";
+proc sql;
+    select
+		 min(day_on_drug) as min
+		,mean(day_on_drug) as mean
+		,median(day_on_drug) as median
+		,max(day_on_drug) as max
+		,nmiss(day_on_drug) as missing
+   from
+		Treatment_final
+    ;
+quit;
