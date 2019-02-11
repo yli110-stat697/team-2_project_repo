@@ -22,6 +22,10 @@ Rationale: This would help to find out what would be the adverser reaction betwe
 Note: This compares the age, weight, race columns in the patient_info dataset.
 ;
 
+Limitations: Values of "Adverser reaction" equal to zero should be excluded from
+the analysis, since they are potentially missing data values.
+;
+
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -34,6 +38,9 @@ Rationale: This could help us to identify whether the reported adverse severity 
 Note: This compares columns Day_on_drug, and severity in placebo and treatment datasets.
 ;
 
+Limitations: Values of "Adverse severity" equal to zero should be excluded from the analysis, since they are potentially missing data values.
+;
+
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -44,4 +51,7 @@ Question: Was the adverse reaction times differ significantly between two groups
 Rationale: This could help us to find out whether the duration of adverse reaction has impact (other than the actual treatment*) between two treatment groups.
 
 Note: This compares the columns ADR_DURATION from adverse_reaction and severity from placebo and treatment.
+;
+
+Limitations: Values of "treatments (groups of patients)" equal to zero should be excluded from the analysis, since they are potentially missing data values. 
 ;
