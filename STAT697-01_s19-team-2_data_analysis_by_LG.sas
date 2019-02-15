@@ -15,15 +15,19 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: What are the distributions of age, race, and adverse reaction in two different groups? 
+Question: What are the distributions of age, race, and adverse reaction in two 
+different groups? 
 
-Rationale: This would help to find out what would be the adverser reaction between race and age group after treatment.We want to make sure if there is any repeating adverse reaction (any actual adverse reaction) between groups to prevent any malpractice.
+Rationale: This would help to find out what would be the adverser reaction 
+between race and age group after treatment.We want to make sure if there is any 
+repeating adverse reaction (any actual adverse reaction) between groups to 
+prevent any malpractice.
 
 Note: This compares the age, weight, race columns in the patient_info dataset.
 ;
 
-Limitations: Values of "Adverser reaction" equal to zero should be excluded from
-the analysis, since they are potentially missing data values.
+Limitations: Values of "Adverser reaction" equal to zero should be excluded 
+from the analysis, since they are potentially missing data values.
 ;
 
 
@@ -33,12 +37,15 @@ the analysis, since they are potentially missing data values.
 *
 Question: Does the duration on drug has significant impact on adverse severity?
 
-Rationale: This could help us to identify whether the reported adverse severity were based on the treatment itself or the duration on drug.
+Rationale: This could help us to identify whether the reported adverse severity 
+were based on the treatment itself or the duration on drug.
 
-Note: This compares columns Day_on_drug, and severity in placebo and treatment datasets.
+Note: This compares columns Day_on_drug, and severity in placebo and treatment 
+datasets.
 ;
 
-Limitations: Values of "Adverse severity" equal to zero should be excluded from the analysis, since they are potentially missing data values.
+Limitations: Values of "Adverse severity" equal to zero should be excluded from 
+the analysis, since they are potentially missing data values.
 ;
 
 
@@ -46,12 +53,17 @@ Limitations: Values of "Adverse severity" equal to zero should be excluded from 
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Was the adverse reaction times differ significantly between two groups of patients? 
+Question: Was the adverse reaction times differ significantly between two 
+groups of patients? 
 
-Rationale: This could help us to find out whether the duration of adverse reaction has impact (other than the actual treatment*) between two treatment groups.
+Rationale: This could help us to figure out whether the duration of adverse 
+reaction has impact (other than the actual treatments) between two treatment 
+groups.
 
-Note: This compares the columns ADR_DURATION from adverse_reaction and severity from placebo and treatment.
+Note: This compares the columns ADR_DURATION from adverse_reaction and severity 
+from placebo and treatment.
 ;
 
-Limitations: Values of "treatments (groups of patients)" equal to zero should be excluded from the analysis, since they are potentially missing data values. 
+Limitations: Values of "treatments (groups of patients)" equal to zero should 
+be excluded from the analysis, since they are potentially missing data values. 
 ;
