@@ -22,6 +22,11 @@ treatment. In other words, we want to be sure that the the grouping wasn't
 biased.
 
 Note: This compares the age, weight, race columns in the patient_info dataset.
+
+Limitations: Descriptive statistics are useful, but eyeballing the differences
+between treatment and placebo groups is not accurate. Besides, there are other
+factors that may underlie the difference for these two groups, like the genetic
+issues(some genotypes are more prone to have adverse effect).
 ;
 
 
@@ -36,6 +41,10 @@ were from placebo effect or they really exist.
 
 Note: This compares columns adverse_reaction and severity in placebo and 
 treatment datasets.
+
+Limitations: There are so many different types of adverse reactions, and each
+reactions have different severities and durations. Severities might positively
+correlate to durations, but it's also possible that they are negatively related
 ;
 
 
@@ -51,5 +60,11 @@ people's reactions to drugs.
 
 Note: This compares the columns age, weight from patient_info to the column 
 adverse_reaction and severity from placebo and treatment.
+
+Limitations: To construct a predicative or classifcation model for adverse
+reactions, we can build models based on different combinations of variables in
+the given dataset. However, the variables given may not have a clear
+explanation for the response variables. Besides, the response variable has a
+few choices, picking up the suited one is critial.
 ;
 
