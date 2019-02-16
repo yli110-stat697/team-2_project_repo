@@ -66,4 +66,5 @@ reactions, we can build models based on different combinations of variables in
 the given dataset. However, the variables given may not have a clear
 explanation for the response variables. Besides, the response variable has a
 few choices, picking up the suited one is critial.
+;
 
