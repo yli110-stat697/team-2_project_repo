@@ -436,6 +436,7 @@ data patient_treatment_v1;
 		relation_to_drug
 		adr_severity
 		adr_duration
+		treatment_group
 	;
 	keep
 		patient_id
@@ -448,6 +449,7 @@ data patient_treatment_v1;
 		relation_to_drug
 		adr_severity
 		adr_duration
+		treatment_group
 	;
 	merge
 		patient_info_final
@@ -494,6 +496,90 @@ quit;
 proc compare
         base=patient_treatment_v1
         compare=patient_treatment_v2
+        novalues
+    ;
+run;
+
+* combine patient_treatment_v1 and placebo_final using a data-step match-merge;
+* note: After running the data step and proc sort step below several times and
+averaging the fullstimer output in the system log, they tend to take about 0.09
+seconds of combined 'real time' to execute and a maximum of about 1.7 MB of
+memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
+computer they were tested on;
+
+data patient_treatment_placebo_v1;
+    retain
+        patient_id
+		age
+		sex
+		weight
+		race
+		day_on_drug
+		adverse_reaction
+		relation_to_drug
+		adr_severity
+		adr_duration
+		treatment_group
+	;
+	keep
+		patient_id
+		age
+		sex
+		weight
+		race
+		day_on_drug
+		adverse_reaction
+		relation_to_drug
+		adr_severity
+		adr_duration
+		treat
+	;
+	merge
+		patient_treatment_v1
+		placebo_final
+	;
+	by patient_id;
+run;
+proc sort data = patient_treatment_placebo_v1;
+	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
+run;
+
+* combine patient_info_final and treatment_final using proc sql;
+* note: After running the proc sql step below several times and averaging the
+fullstimer output in the system log, they tend to take about 0.06 seconds of 
+'real time' to execute and about 5.5 MB on the computer they were tested on;
+proc sql;
+    create table patient_treatment_placebo_v2 as
+        select
+			 coalesce(A.patient_id, B.patient_id) as patient_id
+			,age
+			,sex
+			,weight
+			,race
+			,day_on_drug
+			,adverse_reaction
+			,relation_to_drug
+			,adr_severity
+			,adr_duration
+			,treatment_group
+        from
+            patient_treatment_v1 as A
+            full join
+            placebo_final as B
+            on A.patient_id = B.patient_id
+        order by
+             patient_id
+			,adverse_reaction 
+			,adr_severity 
+			,day_on_drug 
+			,adr_duration
+    ;
+quit;
+
+* verify that patient_treatment_placebo_v1 and patient_treatment_placebo_v2 are identical;
+proc compare
+        base=patient_treatment_placebo_v1
+        compare=patient_treatment_placebo_v2
         novalues
     ;
 run;
