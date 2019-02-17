@@ -502,10 +502,9 @@ run;
 
 * combine patient_treatment_v1 and placebo_final using a data-step match-merge;
 * note: After running the data step and proc sort step below several times and
-averaging the fullstimer output in the system log, they tend to take about 0.09
-seconds of combined 'real time' to execute and a maximum of about 1.7 MB of
-memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
-computer they were tested on;
+averaging the fullstimer output in the system log, they tend to take about 0.01
+seconds of combined 'real time' to execute and a maximum of about 6.8 MB of
+memory on the computer they were tested on;
 
 data patient_treatment_placebo_v1;
     retain
@@ -546,8 +545,8 @@ run;
 
 * combine patient_info_final and treatment_final using proc sql;
 * note: After running the proc sql step below several times and averaging the
-fullstimer output in the system log, they tend to take about 0.06 seconds of 
-'real time' to execute and about 5.5 MB on the computer they were tested on;
+fullstimer output in the system log, they tend to take about 0.03 seconds of 
+'real time' to execute and about 5.6 MB on the computer they were tested on;
 proc sql;
     create table patient_treatment_placebo_v2 as
         select
@@ -556,12 +555,18 @@ proc sql;
 			,sex
 			,weight
 			,race
-			,day_on_drug
-			,adverse_reaction
-			,relation_to_drug
-			,adr_severity
-			,adr_duration
-			,treatment_group
+			,A.day_on_drug
+			,A.adverse_reaction
+			,A.relation_to_drug
+			,A.adr_severity
+			,A.adr_duration
+			,A.treatment_group
+			,B.day_on_drug
+			,B.adverse_reaction
+			,B.relation_to_drug
+			,B.adr_severity
+			,B.adr_duration
+			,B.treatment_group
         from
             patient_treatment_v1 as A
             full join
@@ -587,10 +592,9 @@ run;
 
 * combine treatment_final and placebo_final using a data-step match-merge;
 * note: After running the data step and proc sort step below several times and
-averaging the fullstimer output in the system log, they tend to take about 0.09
-seconds of combined 'real time' to execute and a maximum of about 1.7 MB of
-memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
-computer they were tested on;
+averaging the fullstimer output in the system log, they tend to take about 0.01
+seconds of combined 'real time' to execute and a maximum of about 6 MB of
+memory on the computer they were tested on;
 
 data treatment_placebo_v1;
     retain
@@ -625,18 +629,24 @@ run;
 
 * combine placebo_final and treatment_final using proc sql;
 * note: After running the proc sql step below several times and averaging the
-fullstimer output in the system log, they tend to take about 0.06 seconds of 
+fullstimer output in the system log, they tend to take about 0.03 seconds of 
 'real time' to execute and about 5.5 MB on the computer they were tested on;
 proc sql;
     create table treatment_placebo_v2 as
         select
 			 coalesce(A.patient_id, B.patient_id) as patient_id
-			,day_on_drug
-			,adverse_reaction
-			,relation_to_drug
-			,adr_severity
-			,adr_duration
-			,treatment_group
+			,A.day_on_drug
+			,A.adverse_reaction
+			,A.relation_to_drug
+			,A.adr_severity
+			,A.adr_duration
+			,A.treatment_group
+			,B.day_on_drug
+			,B.adverse_reaction
+			,B.relation_to_drug
+			,B.adr_severity
+			,B.adr_duration
+			,B.treatment_group
         from
             treatment_final as A
             full join
