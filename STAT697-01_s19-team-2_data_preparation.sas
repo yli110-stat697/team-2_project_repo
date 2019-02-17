@@ -614,7 +614,7 @@ data treatment_placebo_v1;
 		relation_to_drug
 		adr_severity
 		adr_duration
-		treat
+		treatment_group
 	;
 	merge
 		treatment_final
