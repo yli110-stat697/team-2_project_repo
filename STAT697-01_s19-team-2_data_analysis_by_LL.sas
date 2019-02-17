@@ -30,9 +30,17 @@ Day_on_Drug have 0 values and very high values that might skew our data.
 proc sgplot
   data = treatment_placebo_v1
   ;
-    vbox days_on_drugs / category = treatment_group
+    vbox day_on_drug / category = treatment_group
+    ;
     vbox adr_duration / category = treatment_group
     ;
+run;
+
+proc sgplot
+  data = treatment_placebo_v1
+  ;
+  scatter X = day_on_drug Y = adr_duration / group = treatment_group
+  ;
 run;
 
 
@@ -102,7 +110,7 @@ proc glmmod
   data = 
     patient_treatment_placebo_v1
   outdesign=
-    patient_treatment_placebo_v1_2
+    patient_treatment_placebo_v1_3
   outparm=
     GLMParm
     ;
@@ -116,9 +124,9 @@ run
 
 
 proc reg data =
-   patient_treatment_placebo_v1_2
+   patient_treatment_placebo_v1_3
   ;
-  DummyVars: model adr_duration = COL2-COL6
+  DummyVars: model adr_duration = COL2-COL5
   ;
   ods select ParameterEstimates;
   quit
