@@ -68,3 +68,26 @@ explanation for the response variables. Besides, the response variable has a
 few choices, picking up the suited one is critial.
 ;
 
+proc sql outobs=10;
+    select
+         patient_id
+        ,avg(adr_duration)
+         as adr_duration_average
+    from
+        patient_placebo_v2
+    group by
+        patient_id
+    ;
+quit;
+
+proc sql outobs=10;
+    select
+         patient_id
+        ,avg(adr_duration)
+         as adr_duration_average
+    from
+        patient_treatment_v2
+    group by
+        patient_id
+    ;
+quit;
