@@ -23,6 +23,9 @@ any repeating adverse reaction (any actual adverse reaction) between groups to
 prevent any malpractice.
 
 Note: This compares the age, race columns in the patient_info dataset.
+
+Limitations: Values of "Adverser reaction" equal to zero should be excluded 
+	from the analysis, since they are potentially missing data values.
 ;
 
 title "Distribution of Age in Traetment Group";
@@ -136,6 +139,10 @@ were based on the treatment itself or the duration on drug.
 
 Note: This compares columns Day_on_drug, and severity in placebo and treatment 
 datasets.
+
+
+Limitations: Values of "Adverse severity" equal to zero should be excluded from 
+	the analysis, since they are potentially missing data values.
 ;
 
 title "Distribution of Duration on drug in Placebo Group";
@@ -179,6 +186,9 @@ groups.
 
 Note: This compares the columns ADR_DURATION from adverse_reaction and severity 
 from placebo and treatment.
+
+Limitations: Values of "treatments (groups of patients)" equal to zero should 
+be excluded from the analysis, since they are potentially missing data values. 
 ;
 
 
