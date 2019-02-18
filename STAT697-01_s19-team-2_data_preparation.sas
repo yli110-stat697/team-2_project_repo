@@ -5,14 +5,20 @@
 
 * 
 [Dataset 1 Name] patient_info
+
 [Dataset Description] This dataset contains the basic information about 
 patients in the study, including sex, age, weight and race.
+
 [Experimental Unit Description] Each patient in this study
+
 [Number of Observations] 357
                     
 [Number of Features] 5
+
 [Data Source] https://semanticommunity.info/@api/deki/files/25541/adverser.xls?origin=mt-web
+
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
+
 [Unique ID Schema] There's one column named patient_id which specifies the 
 identities of patients.
 ;
@@ -25,14 +31,20 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/patient_i
 
 *
 [Dataset 2 Name] placebo
+
 [Dataset Description] The dataset contains the recorded adverse reactions of 
 patients in the placebo group.
+
 [Experimental Unit Description] Each patient in this study
+
 [Number of Observations] 130
                     
 [Number of Features] 8
+
 [Data Source] https://semanticommunity.info/@api/deki/files/25541/adverser.xls?origin=mt-web
+
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
+
 [Unique ID Schema] There's one column named patient_id which specifies the 
 identities of patients.
 ;
@@ -45,14 +57,20 @@ https://github.com/yli110-stat697/team-2_project_repo/blob/master/data/placebo.x
 
 *
 [Dataset 3 Name] treatment
+
 [Dataset Description] The dataset contains the recorded adverse reactions of 
 patients in the drug-treated group.
+
 [Experimental Unit Description] Each patient in the study
+
 [Number of Observations] 127
                     
 [Number of Features] 8
+
 [Data Source] https://semanticommunity.info/@api/deki/files/25541/adverser.xls?origin=mt-web
+
 [Data Dictionary] https://semanticommunity.info/Data_Science/SAS_Public_Data_Sets#Sample_Data_4
+
 [Unique ID Schema] There's one column named patient_id which specifies the 
 identities of patients.
 ;
@@ -107,6 +125,7 @@ options fullstimer;
     %end;
 %mend;
 %loadDatasets
+
 
 * check the dataset patient_info for possible duplicate patients/observations;
 proc sql;
@@ -164,6 +183,7 @@ proc sql;
             placebo
     ;
 quit;
+
 
 * check treatment dataset using the same techniques as above;
 proc sql;
@@ -338,10 +358,10 @@ quit;
 
 * combine patient_info_final and placebo_final using a data-step match-merge;
 * note: After running the data step and proc sort step below several times and
-averaging the fullstimer output in the system log, they tend to take about 0.09
-seconds of combined 'real time' to execute and a maximum of about 1.7 MB of
-memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
-computer they were tested on;
+  averaging the fullstimer output in the system log, they tend to take about 
+  0.09 seconds of combined 'real time' to execute and a maximum of about 1.7 MB 
+  of memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
+  computer they were tested on;
 data patient_placebo_v1;
     retain
         patient_id
@@ -373,16 +393,17 @@ data patient_placebo_v1;
 	;
 	by patient_id;
 run;
+
 proc sort data = patient_placebo_v1;
 	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
 run;
 
 * combine patient_info_final and placebo_final using proc sql;
-* note: After running the proc sql step below several times and averaging the
-fullstimer output in the system log, they tend to take about 0.06 seconds of 
-'real time' to execute and about 5.6 MB on the computer they were tested on. As
-a result, the SQL appears slightly faster to execute as the combined data step
-and proc sort step as above, but to use much more memory;
+* note: After running the proc sql step below several times and averaging the 
+  fullstimer output in the system log, they tend to take about 0.06 seconds of 
+  'real time' to execute and about 5.6 MB on the computer they were tested on. 
+  As a result, the SQL appears slightly faster to execute as the combined data 
+  step and proc sort step as above, but to use much more memory;
 proc sql;
     create table patient_placebo_v2 as
         select
@@ -420,10 +441,10 @@ run;
 
 * combine patient_info_final and treatment_final using a data-step match-merge;
 * note: After running the data step and proc sort step below several times and
-averaging the fullstimer output in the system log, they tend to take about 0.08
-seconds of combined 'real time' to execute and a maximum of about 1.5 MB of
-memory (970 KB for the data step vs 680 KB for the proc sort step) on the
-computer they were tested on;
+  averaging the fullstimer output in the system log, they tend to take about 
+  0.08 seconds of combined 'real time' to execute and a maximum of about 1.5MB
+  of memory (970 KB for the data step vs 680 KB for the proc sort step) on the 
+  computer they were tested on;
 data patient_treatment_v1;
     retain
         patient_id
@@ -457,14 +478,15 @@ data patient_treatment_v1;
 	;
 	by patient_id;
 run;
+
 proc sort data = patient_treatment_v1;
 	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
 run;
 
 * combine patient_info_final and treatment_final using proc sql;
-* note: After running the proc sql step below several times and averaging the
-fullstimer output in the system log, they tend to take about 0.06 seconds of 
-'real time' to execute and about 5.5 MB on the computer they were tested on;
+* note: After running the proc sql step below several times and averaging the 
+  fullstimer output in the system log, they tend to take about 0.06 seconds of
+  'real time' to execute and about 5.5 MB on the computer they were tested on;
 proc sql;
     create table patient_treatment_v2 as
         select
@@ -501,11 +523,11 @@ proc compare
 run;
 
 * combine patient_treatment_v1 and placebo_final using a data-step match-merge;
-* note: After running the data step and proc sort step below several times and
-averaging the fullstimer output in the system log, they tend to take about 0.09
-seconds of combined 'real time' to execute and a maximum of about 1.7 MB of
-memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
-computer they were tested on;
+* note: After running the data step and proc sort step below several times and 
+  averaging the fullstimer output in the system log, they tend to take about 
+  0.09 seconds of combined 'real time' to execute and a maximum of about 1.7 MB 
+  of memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
+  computer they were tested on;
 
 data patient_treatment_placebo_v1;
     retain
@@ -540,14 +562,15 @@ data patient_treatment_placebo_v1;
 	;
 	by patient_id;
 run;
+
 proc sort data = patient_treatment_placebo_v1;
 	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
 run;
 
 * combine patient_info_final and treatment_final using proc sql;
 * note: After running the proc sql step below several times and averaging the
-fullstimer output in the system log, they tend to take about 0.06 seconds of 
-'real time' to execute and about 5.5 MB on the computer they were tested on;
+  fullstimer output in the system log, they tend to take about 0.06 seconds of
+  'real time' to execute and about 5.5 MB on the computer they were tested on;
 proc sql;
     create table patient_treatment_placebo_v2 as
         select
@@ -576,7 +599,8 @@ proc sql;
     ;
 quit;
 
-* verify that patient_treatment_placebo_v1 and patient_treatment_placebo_v2 are identical;
+* verify that patient_treatment_placebo_v1 and patient_treatment_placebo_v2 
+  are identical;
 proc compare
         base=patient_treatment_placebo_v1
         compare=patient_treatment_placebo_v2
@@ -586,11 +610,11 @@ run;
 
 
 * combine treatment_final and placebo_final using a data-step match-merge;
-* note: After running the data step and proc sort step below several times and
-averaging the fullstimer output in the system log, they tend to take about 0.09
-seconds of combined 'real time' to execute and a maximum of about 1.7 MB of
-memory (1000 KB for the data step vs 680 KB for the proc sort step) on the
-computer they were tested on;
+* note: After running the data step and proc sort step below several times 
+  and averaging the fullstimer output in the system log, they tend to take 
+  about 0.09 seconds of combined 'real time' to execute and a maximum of 
+  about 1.7 MB of memory (1000 KB for the data step vs 680 KB for the 
+  proc sort step) on the computer they were tested on;
 
 data treatment_placebo_v1;
     retain
@@ -618,6 +642,7 @@ data treatment_placebo_v1;
 	;
 	by patient_id;
 run;
+
 proc sort data = treatment_placebo_v1;
 	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
 run;
@@ -625,8 +650,8 @@ run;
 
 * combine placebo_final and treatment_final using proc sql;
 * note: After running the proc sql step below several times and averaging the
-fullstimer output in the system log, they tend to take about 0.06 seconds of 
-'real time' to execute and about 5.5 MB on the computer they were tested on;
+  fullstimer output in the system log, they tend to take about 0.06 seconds of
+  'real time' to execute and about 5.5 MB on the computer they were tested on;
 proc sql;
     create table treatment_placebo_v2 as
         select
@@ -651,7 +676,8 @@ proc sql;
     ;
 quit;
 
-* verify that patient_treatment_placebo_v1 and patient_treatment_placebo_v2 are identical;
+* verify that patient_treatment_placebo_v1 and patient_treatment_placebo_v2 
+  are identical;
 proc compare
         base=treatment_placebo_v1
         compare=treatment_placebo_v2
