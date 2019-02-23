@@ -22,7 +22,18 @@ react whether age, weight and/or sex could be a factor.
 
 Note: This compares the column Day_On_Drug and ADR_Duration with 
 Treatment_Group from Placebo and Treatment.
+
+Limitations: Some limiations might include that our adr_duration and 
+Day_on_Drug have 0 values and very high values that might skew our data.
 ;
+
+proc sgplot
+  data = treatment_placebo_v1
+  ;
+    vbox days_on_drugs / category = treatment_group
+    vbox adr_duration / category = treatment_group
+    ;
+run;
 
 
 *******************************************************************************;
@@ -37,8 +48,37 @@ the severity of the drug reaction.
 
 Note: This compares the column ADR_Severity from Placebo and Treatment to the 
 column Age, Weight, and Sex from Patient_Info.
+
+Limitations: Might have a limitation for our character variable and how 
+accurate some of our results might be due to our lack of variety in 
+ADR_Severity
 ;
 
+proc glmmod 
+  data = 
+    patient_treatment_placebo_v1
+  outdesign=
+    patient_treatment_placebo_v1_2
+  outparm=
+    GLMParm
+    ;
+   class 
+    adr_severity
+    ;
+   model 
+    adr_severity =  age weight sex;
+run
+;
+
+
+proc reg data =
+   patient_treatment_placebo_v1_2
+  ;
+  DummyVars: model int_rate = COL2-COL6
+  ;
+  ods select ParameterEstimates;
+  quit
+  ;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -50,6 +90,36 @@ weight of the patient?
 Rationale: Would like to see if the severity and duration align with the same
 factors that are significant.
 
-Note: This compares the column ADR_Severity from Placebo and Treatment to the 
+Note: This compares the column ADR_duration from Placebo and Treatment to the 
 column Age, Weight, and Sex from Patient_Info
+
+Limitations: Again our issue might be based on how common one severity is 
+versus the other ones which might prove to lack our correlation with soeme
+of the variables.
 ;
+
+proc glmmod 
+  data = 
+    patient_treatment_placebo_v1
+  outdesign=
+    patient_treatment_placebo_v1_2
+  outparm=
+    GLMParm
+    ;
+   class 
+    adr_duration
+    ;
+   model 
+    adr_duration =  age weight sex;
+run
+;
+
+
+proc reg data =
+   patient_treatment_placebo_v1_2
+  ;
+  DummyVars: model adr_duration = COL2-COL6
+  ;
+  ods select ParameterEstimates;
+  quit
+  ;
