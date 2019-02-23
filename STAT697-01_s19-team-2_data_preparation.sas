@@ -333,7 +333,8 @@ quit;
         ;
     quit;
     title;
-    */
+        */
+    
 
 
 * combine patient_info_final and placebo_final using a data-step match-merge;
@@ -345,36 +346,40 @@ computer they were tested on;
 data patient_placebo_v1;
     retain
         patient_id
-		age
-		sex
-		weight
-		race
-		day_on_drug
-		adverse_reaction
-		relation_to_drug
-		adr_severity
-		adr_duration
-	;
-	keep
-		patient_id
-		age
-		sex
-		weight
-		race
-		day_on_drug
-		adverse_reaction
-		relation_to_drug
-		adr_severity
-		adr_duration
-	;
-	merge
-		patient_info_final
-		placebo_final
-	;
-	by patient_id;
+        age
+        sex
+        weight
+        race
+        day_on_drug
+        adverse_reaction
+        relation_to_drug
+        adr_severity
+        adr_duration
+        treatment_group
+        total_daily_dose
+    ;
+    keep
+        patient_id
+        age
+        sex
+        weight
+        race
+        day_on_drug
+        adverse_reaction
+        relation_to_drug
+        adr_severity
+        adr_duration
+        treatment_group
+        total_daily_dose
+    ;
+    merge
+        patient_info_final
+        placebo_final
+    ;
+    by patient_id;
 run;
 proc sort data = patient_placebo_v1;
-	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
+    by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
 run;
 
 * combine patient_info_final and placebo_final using proc sql;
@@ -386,16 +391,18 @@ and proc sort step as above, but to use much more memory;
 proc sql;
     create table patient_placebo_v2 as
         select
-			 coalesce(A.patient_id, B.patient_id) as patient_id
-			,age
-			,sex
-			,weight
-			,race
-			,day_on_drug
-			,adverse_reaction
-			,relation_to_drug
-			,adr_severity
-			,adr_duration
+             coalesce(A.patient_id, B.patient_id) as patient_id
+            ,age
+            ,sex
+            ,weight
+            ,race
+            ,day_on_drug
+            ,adverse_reaction
+            ,relation_to_drug
+            ,adr_severity
+            ,adr_duration
+            ,treatment_group
+            ,total_daily_dose
         from
             patient_info_final as A
             full join
@@ -403,10 +410,10 @@ proc sql;
             on A.patient_id = B.patient_id
         order by
              patient_id
-			,adverse_reaction 
-			,adr_severity 
-			,day_on_drug 
-			,adr_duration
+            ,adverse_reaction 
+            ,adr_severity 
+            ,day_on_drug 
+            ,adr_duration
     ;
 quit;
 
@@ -427,36 +434,40 @@ computer they were tested on;
 data patient_treatment_v1;
     retain
         patient_id
-		age
-		sex
-		weight
-		race
-		day_on_drug
-		adverse_reaction
-		relation_to_drug
-		adr_severity
-		adr_duration
-	;
-	keep
-		patient_id
-		age
-		sex
-		weight
-		race
-		day_on_drug
-		adverse_reaction
-		relation_to_drug
-		adr_severity
-		adr_duration
-	;
-	merge
-		patient_info_final
-		treatment_final
-	;
-	by patient_id;
+        age
+        sex
+        weight
+        race
+        day_on_drug
+        adverse_reaction
+        relation_to_drug
+        adr_severity
+        adr_duration
+        treatment_group
+        total_daily_dose
+    ;
+    keep
+        patient_id
+        age
+        sex
+        weight
+        race
+        day_on_drug
+        adverse_reaction
+        relation_to_drug
+        adr_severity
+        adr_duration
+        treatment_group
+        total_daily_dose
+    ;
+    merge
+        patient_info_final
+        treatment_final
+    ;
+    by patient_id;
 run;
 proc sort data = patient_treatment_v1;
-	by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
+    by patient_id adverse_reaction adr_severity day_on_drug adr_duration;
 run;
 
 * combine patient_info_final and treatment_final using proc sql;
@@ -466,16 +477,18 @@ fullstimer output in the system log, they tend to take about 0.06 seconds of
 proc sql;
     create table patient_treatment_v2 as
         select
-			 coalesce(A.patient_id, B.patient_id) as patient_id
-			,age
-			,sex
-			,weight
-			,race
-			,day_on_drug
-			,adverse_reaction
-			,relation_to_drug
-			,adr_severity
-			,adr_duration
+             coalesce(A.patient_id, B.patient_id) as patient_id
+            ,age
+            ,sex
+            ,weight
+            ,race
+            ,day_on_drug
+            ,adverse_reaction
+            ,relation_to_drug
+            ,adr_severity
+            ,adr_duration
+            ,treatment_group
+            ,total_daily_dose
         from
             patient_info_final as A
             full join
@@ -483,10 +496,10 @@ proc sql;
             on A.patient_id = B.patient_id
         order by
              patient_id
-			,adverse_reaction 
-			,adr_severity 
-			,day_on_drug 
-			,adr_duration
+            ,adverse_reaction 
+            ,adr_severity 
+            ,day_on_drug 
+            ,adr_duration
     ;
 quit;
 
@@ -497,3 +510,43 @@ proc compare
         novalues
     ;
 run;
+
+*first vertical combine;
+proc sql;
+    create table placebo_treatment as
+        select *
+            from treatment_final
+        union corr
+        select *
+            from placebo_final
+    ;
+quit;
+*then horizontal join;
+proc sql;
+    create table patient_treatment_placebo as
+        select
+             coalesce(A.patient_id, B.patient_id) as patient_id
+            ,age
+            ,sex
+            ,weight
+            ,race
+            ,day_on_drug
+            ,adverse_reaction
+            ,relation_to_drug
+            ,adr_severity
+            ,adr_duration
+            ,treatment_group
+            ,total_daily_dose
+        from
+            patient_info_final as A
+            full join
+            placebo_treatment as B
+            on A.patient_id = B.patient_id
+        order by
+             patient_id
+            ,adverse_reaction 
+            ,adr_severity 
+            ,day_on_drug 
+            ,adr_duration
+    ;
+quit;
