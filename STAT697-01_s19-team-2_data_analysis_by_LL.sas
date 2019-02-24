@@ -103,17 +103,13 @@ of the variables.
 proc glmmod 
   data = 
     patient_treatment_placebo_v1
-  outdesign=
-    patient_treatment_placebo_v1_3
-  outparm= GLMParm
+      outdesign=patient_treatment_placebo_v1_3
+    outparm= GLMParm
     ;
-   class 
-    adr_duration
+   class adr_duration
     ;
-   model 
-    adr_duration =  age weight sex;
-run
-;
+   model adr_duration =  age weight sex;
+run;
 
 
 proc reg data =
@@ -122,5 +118,4 @@ proc reg data =
   DummyVars: model adr_duration = COL2-COL5
   ;
   ods select ParameterEstimates;
-  quit
-  ;
+  quit;
