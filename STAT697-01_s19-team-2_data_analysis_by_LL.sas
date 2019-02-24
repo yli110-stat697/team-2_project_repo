@@ -63,30 +63,24 @@ ADR_Severity
 ;
 
 proc glmmod 
-  data = 
-    patient_treatment_placebo_v1
-  outdesign=
-    patient_treatment_placebo_v1_2
-  outparm=
-    GLMParm
+  data = patient_treatment_placebo_v1
+      outdesign=
+  patient_treatment_placebo_v1_2
+         outparm = GLMParm
     ;
-   class 
-    adr_severity
+   class adr_severity
     ;
-   model 
-    adr_severity =  age weight sex;
-run
-;
+   model adr_severity =  age weight sex;
+run;
 
 
-proc reg data =
-   patient_treatment_placebo_v1_2
+proc reg
+     data = patient_treatment_placebo_v1_2
   ;
   DummyVars: model int_rate = COL2-COL6
   ;
   ods select ParameterEstimates;
-  quit
-  ;
+  quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -111,8 +105,7 @@ proc glmmod
     patient_treatment_placebo_v1
   outdesign=
     patient_treatment_placebo_v1_3
-  outparm=
-    GLMParm
+  outparm= GLMParm
     ;
    class 
     adr_duration
