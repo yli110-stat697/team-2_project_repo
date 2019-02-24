@@ -25,51 +25,41 @@ prevent any malpractice.
 Note: This compares the age, race columns in the patient_info dataset.
 
 Limitations: Values of "Adverser reaction" equal to zero should be excluded 
-	from the analysis, since they are potentially missing data values.
+from the analysis, since they are potentially missing data values.
 ;
 
 title "Distribution of Age in Traetment Group";
-proc sql; 
-	select 
-		 min(age) as min
-		,max(age) as max
-		,mean(age) as mean
-		,median(age) as median
-		,nmiss(age) as missing
-	from
-		patient_treatment_v2
-	;
-quit;
-
-
+proc sgplot data=Adverser_analytical_file;
+	vbox age / category = treatment_group;
+run;
 
 title "Distribution of Race in Traetment Group";
 proc sql; 
 	select 
-		 race
+		 treatment_group
+		,race
 		,count(*) as row_count_race
 	from
-		patient_treatment_v2
+		Adverser_analytical_file
 	group by
-		race
+		 treatment_group
+		,race
 	having 
 		row_count_race > 0
-	order by
-		row_count_race desc
-;
+	;
 quit;
-
-
 
 title "Distribution of Adverse Reaction in Traetment Group";
 proc sql outobs=10; 
 	select 
-		 adverse_reaction
+		 treatment_group
+		,adverse_reaction
 		,count(*) as row_count_reaction
 	from
-		patient_treatment_v2
+		Adverser_analytical_file
 	group by
-		adverse_reaction
+		 treatment_group
+		,adverse_reaction
 	having 
 		row_count_reaction > 0
 	order by
@@ -77,55 +67,6 @@ proc sql outobs=10;
 	;
 quit;
 
-
-title "Distribution of Age in Placebo Group";
-proc sql; 
-	select 
-		 min(age) as min
-		,max(age) as max
-		,mean(age) as mean
-		,median(age) as median
-		,nmiss(age) as missing
-	from
-		patient_placebo_v2
-	;
-quit;
-
-
-
-title "Distribution of Race in Placebo Group";
-proc sql; 
-	select 
-		 race
-		,count(*) as row_count_race
-	from
-		patient_placebo_v2
-	group by
-		race
-	having 
-		row_count_race > 0
-	order by
-		row_count_race desc
-	;
-quit;
-
-
-
-title "Distribution of Adverse Reaction in Placebo Group";
-proc sql outobs=10; 
-	select 
-		 adverse_reaction
-		,count(*) as row_count_reaction
-	from
-		patient_placebo_v2
-	group by
-		adverse_reaction
-	having 
-		row_count_reaction > 0
-	order by
-		row_count_reaction desc
-	;
-quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -135,42 +76,31 @@ quit;
 adverse severity?
 
 Rationale: This could help us to identify whether the reported adverse severity 
-were based on the treatment itself or the duration on drug.
+were based on the treatment itself or/and the duration on drug.
 
 Note: This compares columns Day_on_drug, and severity in placebo and treatment 
 datasets.
 
-
 Limitations: Values of "Adverse severity" equal to zero should be excluded from 
-	the analysis, since they are potentially missing data values.
+the analysis, since they are potentially missing data values.
 ;
 
-title "Distribution of Duration on drug in Placebo Group";
-proc sql; 
-	select 
-		 min(day_on_drug) as min
-		,max(day_on_drug) as max
-		,mean(day_on_drug) as mean
-		,median(day_on_drug) as median
-		,nmiss(day_on_drug) as missing
-	from
-		patient_placebo_v2
-	;
-quit;
-
-
 title "Distribution of Duration on drug in Treatment Group";
-proc sql; 
-	select 
-		 min(day_on_drug) as min
-		,max(day_on_drug) as max
-		,mean(day_on_drug) as mean
-		,median(day_on_drug) as median
-		,nmiss(day_on_drug) as missing
-	from
-		patient_treatment_v2
-	;
-quit;
+proc sgplot data=Adverser_analytical_file;
+	vbox day_on_drug / category = treatment_group;
+run;
+
+ods graphics on;
+title 'Occurrence of ADR Severity';
+proc logistic data=Adverser_analytical_file;
+	class treatment_group;
+	model adr_severity = treatment_group day_on_drug /influence;
+	/*
+	p-value=0.5804 > alpha=0.05, failed to conclude that the duration on drug has 
+	significant impact on adverse severity (treatment group, p-value=0.5804
+	has no significant impact on adverse severity as well).
+	*/
+run;
 
 
 *******************************************************************************;
@@ -191,30 +121,47 @@ Limitations: Values of "treatments (groups of patients)" equal to zero should
 be excluded from the analysis, since they are potentially missing data values. 
 ;
 
-
-title "Distribution of Adverse Reaction time in Placebo Group";
-proc sql; 
-	select 
-		 min(adr_duration) as min
-		,max(adr_duration) as max
-		,mean(adr_duration) as mean
-		,median(adr_duration) as median
-		,nmiss(adr_duration) as missing
-	from
-		patient_placebo_v2
-	;
-quit;
-
-
 title "Distribution of Adverse Reaction time in Treatment Group";
-proc sql; 
-	select 
-		 min(adr_duration) as min
-		,max(adr_duration) as max
-		,mean(adr_duration) as mean
-		,median(adr_duration) as median
-		,nmiss(adr_duration) as missing
-	from
-		patient_treatment_v2
+proc sgplot data=Adverser_analytical_file;
+	vbox adr_duration / category = treatment_group;
+run;
+
+ods graphics on;
+title 'Difference of ADR Reaction Time in two groups';
+proc glm data=Adverser_analytical_file;
+	class treatment_group;
+	model adr_duration = treatment_group /solution;
+	output out=residuals r=resid;
+	/*
+	Since F value for treatment goup is 3.90, with p-value=0.0492 < alph=0.05, 
+	reject H0. There is enough evident to show that the ADR duration time is 
+	different between treatment group, however, the result is not significant.
+	*/
+run;
+
+/* 
+Check Assumptions for valid ANOVA:
+1. Homogeneity variances
+proc glm data=Adverser_analytical_file; 
+	class treatment_group; 
+	model adr_duration = treatment_group /solution;
+	means treatment_group / hovtest = levene; 
+	*
+	H0: Homogeneity variances
+	Ha: Not all variances are the same
+	Since p-value=0.3197 > alpha=0.05, Homogeneity variance.
 	;
-quit;
+run; 
+
+2. Nomality of residuals
+proc univariate data=residuals plot normal; 
+	var resid; 
+	*
+	H0: Normal residuals
+	Ha: Residuals not normally distributed
+	Since p-value<0.0001, Residuals are normally distributed.
+	;
+run; 
+
+* Based on above validation, model is valid ANOVA;
+*/
