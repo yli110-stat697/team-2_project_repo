@@ -13,13 +13,16 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1
+'Question: What is the distribution of days on drug and duration of adverse 
+reaction for placebo and non placebo patients?';
+
+title2
+'Rationale: This would help formulate more questions around how some patients 
+react whether age, weight and/or sex could be a factor.';
+
 *
-Question: What is the distribution of days on drug and duration of adverse 
-reaction for placebo and non placebo patients?
-
-Rationale: This would help formulate more questions around how some patients 
-react whether age, weight and/or sex could be a factor.
-
 Note: This compares the column Day_On_Drug and ADR_Duration with 
 Treatment_Group from Placebo and Treatment.
 
@@ -42,18 +45,22 @@ proc sgplot
   scatter X = day_on_drug Y = adr_duration / group = treatment_group
   ;
 run;
-
+title;
+footnote;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1
+'Question: Is there a correlation with Severity of reaction from age, weight,
+and sex?';
+
+title2
+'Rationale: This would help identify any significant factors that contribute to 
+the severity of the drug reaction.';
+
 *
-Question: Is there a correlation with Severity of reaction from age, weight,
-and sex?
-
-Rationale: This would help identify any significant factors that contribute to 
-the severity of the drug reaction.
-
 Note: This compares the column ADR_Severity from Placebo and Treatment to the 
 column Age, Weight, and Sex from Patient_Info.
 
@@ -79,17 +86,22 @@ proc reg
   ;
   ods select ParameterEstimates;
   quit;
+title;
+footnote;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
+
+title1
+'Question: Is the duration of the reaction correlated with the age, sex, and
+weight of the patient?';
+
+title2
+'Rationale: Would like to see if the severity and duration align with the same
+factors that are significant.';
+
 *
-Question: Is the duration of the reaction correlated with the age, sex, and
-weight of the patient?
-
-Rationale: Would like to see if the severity and duration align with the same
-factors that are significant.
-
 Note: This compares the column ADR_duration from Placebo and Treatment to the 
 column Age, Weight, and Sex from Patient_Info
 
@@ -115,3 +127,5 @@ proc reg
   ;
   ods select ParameterEstimates;
   quit;
+title;
+footnote;
