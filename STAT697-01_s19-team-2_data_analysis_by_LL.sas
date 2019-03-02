@@ -107,6 +107,7 @@ ods html;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 
+
 title1
 'Question: Is there a correlation with Severity of reaction from age, weight,
 and sex?';
@@ -114,6 +115,21 @@ and sex?';
 title2
 'Rationale: This would help identify any significant factors that contribute to 
 the severity of the drug reaction.';
+
+footnote1
+'Here we see that a moderate reaction is much more significant than a mild
+ reaction and yet the days on drugs is not as significant as opposed to
+ our last regression model, yet weight is a factor.';
+
+footnote2
+'I find this to be significant because this lines up more with our graph
+ showing that the amount of time on the drug or placebo does not correlate
+ with how long their reaction is.';
+
+footnote3
+'It is interesting to me why weight is a factor in the reaction but not the
+ duration. Could this be due to nutrition and if so is there a weight range
+ that would cause a certain type of reaction?';
 
 *
 Note: This compares the column ADR_Severity from Placebo and Treatment to the 
@@ -124,32 +140,12 @@ accurate some of our results might be due to our lack of variety in
 ADR_Severity
 ;
 
-proc glmmod 
-      data = patient_treatment_placebo_v1
-      outdesign = patient_treatment_placebo_v1_2
-      outparm = GLMParm
-   ;
-   class adr_severity;
-   model adr_severity =  age weight sex;
+proc logistic
+			data = adverser_analytical_file
+	;
+	class sex;
+	model adr_severity = age weight sex day_on_drug;
+	ods select ParameterEstimates;
 run;
-
-
-proc reg
-     data = patient_treatment_placebo_v1_2
-  ;
-  DummyVars: model int_rate = COL2-COL6
-  ;
-  ods select ParameterEstimates;
-  quit;
 title;
 footnote;
-proc reg 
-      data = adverser_analytical_file_2
-  ;
-  DummyVars: model adr_duration = COL2-COL6
-  ;
-  ods select ParameterEstimates;
-  quit;
-title;
-footnote;
-
