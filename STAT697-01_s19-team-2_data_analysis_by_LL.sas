@@ -62,47 +62,6 @@ footnote;
 *******************************************************************************;
 
 title1
-'Question: Is there a correlation with Severity of reaction from age, weight,
-and sex?';
-
-title2
-'Rationale: This would help identify any significant factors that contribute to 
-the severity of the drug reaction.';
-
-*
-Note: This compares the column ADR_Severity from Placebo and Treatment to the 
-column Age, Weight, and Sex from Patient_Info.
-
-Limitations: Might have a limitation for our character variable and how 
-accurate some of our results might be due to our lack of variety in 
-ADR_Severity
-;
-
-proc glmmod 
-      data = patient_treatment_placebo_v1
-      outdesign = patient_treatment_placebo_v1_2
-      outparm = GLMParm
-   ;
-   class adr_severity;
-   model adr_severity =  age weight sex;
-run;
-
-
-proc reg
-     data = patient_treatment_placebo_v1_2
-  ;
-  DummyVars: model int_rate = COL2-COL6
-  ;
-  ods select ParameterEstimates;
-  quit;
-title;
-footnote;
-
-*******************************************************************************;
-* Research Question Analysis Starting Point;
-*******************************************************************************;
-
-title1
 'Question: Is the duration of the reaction correlated with the age, sex, 
  weight, and day on drug of the patient?';
 
@@ -144,6 +103,46 @@ run;
 ods html;
 
 
+*******************************************************************************;
+* Research Question Analysis Starting Point;
+*******************************************************************************;
+
+title1
+'Question: Is there a correlation with Severity of reaction from age, weight,
+and sex?';
+
+title2
+'Rationale: This would help identify any significant factors that contribute to 
+the severity of the drug reaction.';
+
+*
+Note: This compares the column ADR_Severity from Placebo and Treatment to the 
+column Age, Weight, and Sex from Patient_Info.
+
+Limitations: Might have a limitation for our character variable and how 
+accurate some of our results might be due to our lack of variety in 
+ADR_Severity
+;
+
+proc glmmod 
+      data = patient_treatment_placebo_v1
+      outdesign = patient_treatment_placebo_v1_2
+      outparm = GLMParm
+   ;
+   class adr_severity;
+   model adr_severity =  age weight sex;
+run;
+
+
+proc reg
+     data = patient_treatment_placebo_v1_2
+  ;
+  DummyVars: model int_rate = COL2-COL6
+  ;
+  ods select ParameterEstimates;
+  quit;
+title;
+footnote;
 proc reg 
       data = adverser_analytical_file_2
   ;
