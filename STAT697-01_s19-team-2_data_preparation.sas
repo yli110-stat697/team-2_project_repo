@@ -353,7 +353,6 @@ quit;
         ;
     quit;
     title;
-        */
     
 
 
@@ -573,3 +572,52 @@ proc sql;
             ,adr_duration
     ;
 quit;
+*/
+
+**Build analytical file by a single PROC SQL;
+proc sql;
+    create table adverser_analytical_file_raw as 
+        select
+             coalesce(A.patient_id, B.patient_id) as patient_id
+            ,age
+            ,sex
+            ,weight
+            ,race
+            ,day_on_drug
+            ,adverse_reaction
+            ,relation_to_drug
+            ,adr_severity
+            ,adr_duration
+            ,treatment_group
+            ,total_daily_dose
+        from
+            patient_info_final as A
+            full join
+            (
+            select *
+                from treatment_final
+            union corr
+            select *
+                from placebo_final
+            ) as B
+            on A.patient_id = B.patient_id
+        order by 
+             patient_id
+            ,adverse_reaction 
+            ,adr_severity 
+            ,day_on_drug 
+            ,adr_duration
+    ;
+quit;
+
+**remove duplicate records from the analytical_file above;
+proc sort
+        noduprecs
+        data = adverser_analytical_file_raw
+        out = adverser_analytical_file
+    ;
+    by
+        patient_id treatment_group adverse_reaction
+    ;
+run;
+
