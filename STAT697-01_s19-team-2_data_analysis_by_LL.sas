@@ -63,13 +63,11 @@ ADR_Severity
 ;
 
 proc glmmod 
-  data = patient_treatment_placebo_v1
-      outdesign=
-  patient_treatment_placebo_v1_2
-         outparm = GLMParm
-    ;
-   class adr_severity
-    ;
+      data = patient_treatment_placebo_v1
+      outdesign = patient_treatment_placebo_v1_2
+      outparm = GLMParm
+   ;
+   class adr_severity;
    model adr_severity =  age weight sex;
 run;
 
@@ -101,19 +99,17 @@ of the variables.
 ;
 
 proc glmmod 
-  data = 
-    patient_treatment_placebo_v1
-      outdesign=patient_treatment_placebo_v1_3
-    outparm= GLMParm
+        data = patient_treatment_placebo_v1
+        outdesign = patient_treatment_placebo_v1_3
+        outparm= GLMParm
     ;
-   class adr_duration
-    ;
-   model adr_duration =  age weight sex;
+    class adr_duration;
+    model adr_duration =  age weight sex;
 run;
 
 
-proc reg data =
-   patient_treatment_placebo_v1_3
+proc reg 
+      data = patient_treatment_placebo_v1_3
   ;
   DummyVars: model adr_duration = COL2-COL5
   ;
